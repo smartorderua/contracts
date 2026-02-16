@@ -5,10 +5,22 @@ using Http;
 @service(#{ title: "NovaOrder Service" })
 namespace NovaOrder;
 
-model Topping {
-  id: string;
+model ToppingInput {
   name: string;
   price: int32;
+}
+
+model Topping {
+  id: string;
+  ...ToppingInput;
+}
+
+model MenuItemInput {
+  name: string;
+  price: int32;
+  available: boolean;
+  description: string;
+  toppings: ToppingInput[];
 }
 
 model MenuItem {
@@ -21,14 +33,6 @@ model MenuItem {
   toppings: Topping[];
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-}
-
-model MenuItemCreate {
-  name: string;
-  price: int32;
-  available: boolean;
-  description: string;
-  toppings: Topping[];
 }
 
 model MenuItemList {
@@ -49,7 +53,7 @@ interface MenuItems {
 
   @post
   @useAuth(BearerAuth)
-  create(@body body: MenuItem): MenuItem | Error;
+  create(@body body: MenuItemInput): MenuItem | Error;
 
   @patch
   @useAuth(BearerAuth)
@@ -69,7 +73,7 @@ enum OrderStatus {
   Cancelled: "cancelled",
 }
 
-model OrderItemCreate {
+model OrderItemInput {
   tableId: int32;
   menuItemId: string;
   toppings: string[];
@@ -93,6 +97,6 @@ interface Orders {
 
   @post create(
     @path tableId: int32,
-    @body body: OrderItemCreate[],
+    @body body: OrderItemInput[],
   ): OrderItem | Error;
 }
