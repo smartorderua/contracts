@@ -1,102 +1,153 @@
 import "@typespec/http";
+import "@typespec/versioning";
+import "./models";
 
 using Http;
+using Versioning;
 
 @service(#{ title: "NovaOrder Service" })
+@versioned(Versions)
 namespace NovaOrder;
 
-model ToppingInput {
-  name: string;
-  price: int32;
+enum Versions {
+  v1: "1.0",
 }
 
-model Topping {
-  id: string;
-  ...ToppingInput;
-}
-
-model MenuItemInput {
-  name: string;
-  price: int32;
-  available: boolean;
-  description: string;
-  toppings: ToppingInput[];
-}
-
-model MenuItem {
-  id: string;
-  name: string;
-  price: int32;
-  available: boolean;
-  imageUrl: string;
-  description: string;
-  toppings: Topping[];
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-}
-
-model MenuItemList {
-  items: MenuItem[];
-}
-
-@error
-model Error {
-  code: int32;
-  message: string;
+model TenantParams {
+  @path tenantId: string;
 }
 
 @tag("Menu")
 @route("/menu")
 interface MenuItems {
-  @get list(): MenuItemList | Error;
-  @get read(@path id: string): MenuItem | Error;
+  @get list(...TenantParams): {
+    @statusCode statusCode: 200;
+    @body items: MenuItem[];
+  } | {
+    @statusCode statusCode: 404;
+    @body error: TenantNotFoundError;
+  };
+
+  @get read(...TenantParams, @path menuItemId: string): {
+    @statusCode statusCode: 200;
+    @body item: MenuItem;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: TenantNotFoundError;
+  };
 
   @post
   @useAuth(BearerAuth)
-  create(@body body: MenuItemInput): MenuItem | Error;
+  create(...TenantParams, @body body: MenuItemInput):
+    | {
+        @statusCode statusCode: 201;
+        @body createdItem: MenuItem;
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: TenantNotFoundError;
+      };
 
   @patch
   @useAuth(BearerAuth)
   update(
+    ...TenantParams,
     @path id: string,
     @body body: MergePatchUpdate<MenuItem>,
-  ): MenuItem | Error;
+  ):
+    | {
+        @statusCode statusCode: 200;
+        @body updatedItem: MenuItem;
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: TenantNotFoundError;
+      };
 
   @delete
   @useAuth(BearerAuth)
-  delete(@path id: string): void | Error;
+  delete(...TenantParams, @path id: string):
+    | {
+        @statusCode statusCode: 204;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: TenantNotFoundError;
+      };
 }
 
-enum OrderStatus {
-  Paid: "paid",
-  Pending: "pending",
-  Cancelled: "cancelled",
-}
-
-model OrderItemInput {
-  tableId: int32;
-  menuItemId: string;
-  toppings: string[];
-}
-
-model OrderItem {
-  id: string;
-  totalPrice: int32;
-  menuItemId: string;
-  invoiceId?: string;
-}
-
-model OrderItemList {
-  items: OrderItem[];
+model OrderParams {
+  ...TenantParams;
+  @path tableId: int32;
 }
 
 @tag("Orders")
 @route("/orders")
 interface Orders {
-  @get read(tableId: int32): OrderItemList | Error;
+  // List all orders for a specific tenant and table
+  // Acts like a table session
+  @get read(...OrderParams): {
+    @statusCode statusCode: 200;
+    @body items: OrderItem[];
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: TenantNotFoundError;
+  };
 
-  @post create(
-    @path tableId: int32,
-    @body body: OrderItemInput[],
-  ): OrderItem | Error;
+  // Create new order for a specific tenant and table
+  @post create(...OrderParams, @body body: OrderItemInput[]):
+    | {
+        @statusCode statusCode: 201;
+        @body createdItems: OrderItem[];
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: TenantNotFoundError;
+      };
 }
