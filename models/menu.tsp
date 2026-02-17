@@ -15,8 +15,7 @@ model MenuItemInput {
 }
 
 model MenuItem {
-    // bson id
-    @extension("x-faker", #{ `random.alpha`: #[16] })
+    @extension("x-faker", "database.mongodbObjectId")
     id: string;
 
     @extension("x-faker", "lorem.slug")
@@ -25,7 +24,7 @@ model MenuItem {
     @minValue(0)
     @extension(
         "x-faker",
-        #{ `random.number`: #{ min: 90000, max: 400000, presicion: 10 } }
+        #{ `random.number`: #{ min: 9000, max: 40000, precision: 10 } }
     )
     price: int32;
 
@@ -34,12 +33,16 @@ model MenuItem {
 
     available: boolean;
 
-    @extension("x-faker", "image.food")
+    @extension(
+        "x-faker",
+        #{ `helpers.arrayElement`: #[#["https://static.photos/food/640x360"]] }
+    )
     imageUrl: string;
 
     @extension("x-faker", "lorem.sentence")
     description: string;
 
+    category: string;
     toppings: Topping[];
     createdAt: utcDateTime;
     updatedAt: utcDateTime;
