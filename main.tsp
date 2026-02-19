@@ -63,6 +63,14 @@ interface MenuItems {
         @body error: TenantNotFoundError;
       };
 
+  @post
+  @useAuth(BearerAuth)
+  updateItemImage(
+    @multipartBody fields: {
+      file: HttpPart<File>;
+    },
+  ): void;
+
   @patch
   @useAuth(BearerAuth)
   update(

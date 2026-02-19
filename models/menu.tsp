@@ -16,10 +16,8 @@ model MenuItemInput {
 
 model MenuItem {
     // bson id
-    @extension("x-faker", #{ `random.alpha`: #[16] })
     id: string;
 
-    @extension("x-faker", "lorem.slug")
     name: string;
 
     @minValue(0)
@@ -29,17 +27,10 @@ model MenuItem {
     )
     price: int32;
 
-    @extension("x-faker", #{ `random.alpha`: #[16] })
     tenantId: string;
-
     available: boolean;
-
-    @extension("x-faker", "image.food")
     imageUrl: string;
-
-    @extension("x-faker", "lorem.sentence")
     description: string;
-
     toppings: Topping[];
     createdAt: utcDateTime;
     updatedAt: utcDateTime;
