@@ -17,6 +17,18 @@ model TenantParams {
   @path tenantId: string;
 }
 
+@tag("Tenants")
+@route("/tenants")
+interface Tenants {
+  @get find(@path tenantId: string): {
+    @statusCode statusCode: 200;
+    @body tenant: Tenant;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  };
+}
+
 @tag("Menu")
 @route("/menu")
 interface MenuItems {
