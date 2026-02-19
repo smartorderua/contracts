@@ -5,8 +5,8 @@ import "./models";
 using Http;
 using Versioning;
 
-@service(#{ title: "NovaOrder Service" })
 @versioned(Versions)
+@service(#{ title: "NovaOrder Service" })
 namespace NovaOrder;
 
 enum Versions {
@@ -124,6 +124,10 @@ model OrderParams {
   @path tableId: int32;
 }
 
+model OrderCreateResponse {
+  paymentUrl: string;
+}
+
 @tag("Orders")
 @route("/orders")
 interface Orders {
@@ -144,7 +148,7 @@ interface Orders {
   @post create(...OrderParams, @body body: OrderItemInput[]):
     | {
         @statusCode statusCode: 201;
-        @body createdItems: OrderItem[];
+        @body resp: OrderCreateResponse;
       }
     | {
         @statusCode statusCode: 400;

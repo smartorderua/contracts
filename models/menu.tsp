@@ -1,7 +1,4 @@
 import "./toppings.tsp";
-import "@typespec/openapi";
-
-using OpenAPI;
 
 model MenuItemInput {
     name: string;
@@ -21,10 +18,6 @@ model MenuItem {
     name: string;
 
     @minValue(0)
-    @extension(
-        "x-faker",
-        #{ `random.number`: #{ min: 90000, max: 400000, presicion: 10 } }
-    )
     price: int32;
 
     tenantId: string;
