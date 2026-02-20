@@ -1,6 +1,3 @@
-@secret
-scalar Password extends string;
-
 model UserPublic {
     id: BsonId;
     username: string;
@@ -8,5 +5,12 @@ model UserPublic {
 }
 
 model User extends UserPublic {
-    password: Password;
+    @secret
+    password: string;
+
+    @secret
+    session: {
+        refresh: string;
+        expiresAt: utcDateTime;
+    };
 }
