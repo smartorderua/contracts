@@ -28,6 +28,16 @@ model LoginRequest {
 @route("/auth")
 interface Auth {
   @post
+  @route("/signup")
+  signUp(@body body: LoginRequest): {
+    @statusCode statusCode: 201;
+    @body response: UserPublic;
+  } | {
+    @statusCode statusCode: 400;
+    @body error: ValidationError;
+  };
+
+  @post
   @route("/login")
   login(@body body: LoginRequest): {
     @statusCode statusCode: 200;
