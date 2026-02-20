@@ -1,7 +1,5 @@
 model Tenant {
-    // mongo id
-    id: string;
-
+    id: BsonId;
     name: string;
     uniqueId: string;
 }

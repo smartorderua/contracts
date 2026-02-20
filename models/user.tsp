@@ -2,7 +2,7 @@
 scalar Password extends string;
 
 model UserPublic {
-    id: string;
+    id: BsonId;
     username: string;
     role: "admin" | "staff";
 }

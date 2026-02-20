@@ -1,4 +1,5 @@
 import "@typespec/openapi";
+import "./id.tsp";
 
 using OpenAPI;
 
@@ -15,8 +16,6 @@ model ToppingInput {
 }
 
 model Topping {
-    @extension("x-faker", "database.mongodbObjectId")
-    id: string;
-
+    id: BsonId;
     ...ToppingInput;
 }

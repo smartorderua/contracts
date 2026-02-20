@@ -1,4 +1,5 @@
 import "./toppings.tsp";
+import "./id.tsp";
 
 model MenuItemInput {
     name: string;
@@ -14,7 +15,7 @@ model MenuItemInput {
 
 model MenuItem {
     // bson id
-    id: string;
+    id: BsonId;
 
     name: string;
 
