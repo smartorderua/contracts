@@ -37,7 +37,7 @@ jobs:
             VERSION="${{ github.ref_name }}"
             IS_PRERELEASE="false"
           else
-            LATEST_TAG=$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || echo "v0.0.0")
+            LATEST_TAG=$(git tag --list 'v*' --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
             BASE_VERSION="${LATEST_TAG#v}"
             SHORT_SHA="${GITHUB_SHA::7}"
             VERSION="v${BASE_VERSION}-dev.${SHORT_SHA}"
