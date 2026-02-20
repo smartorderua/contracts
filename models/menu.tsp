@@ -24,6 +24,7 @@ model MenuItem {
 
     tenantId: string;
     available: boolean;
+    category: string;
     imageUrl: string;
     description: string;
     toppings: Topping[];
