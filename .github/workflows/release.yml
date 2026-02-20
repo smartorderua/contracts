@@ -1,0 +1,57 @@
+name: Release OpenAPI Schema
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate OpenAPI schema
+        run: bun compile
+
+      - name: Set version variables
+        id: vars
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            VERSION="${{ github.ref_name }}"
+            IS_PRERELEASE="false"
+          else
+            LATEST_TAG=$(git describe --tags --match 'v*' --abbrev=0 2>/dev/null || echo "v0.0.0")
+            BASE_VERSION="${LATEST_TAG#v}"
+            SHORT_SHA="${GITHUB_SHA::7}"
+            VERSION="v${BASE_VERSION}-dev.${SHORT_SHA}"
+            IS_PRERELEASE="true"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "IS_PRERELEASE=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.vars.outputs.VERSION }}" \
+            --title "${{ steps.vars.outputs.VERSION }}" \
+            --notes "Automated release of OpenAPI schema" \
+            --prerelease="${{ steps.vars.outputs.IS_PRERELEASE }}" \
+            ./schema/openapi.1.0.yaml

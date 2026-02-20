@@ -6,6 +6,7 @@ model MenuItemInput {
     @minValue(0)
     price: int32;
 
+    category: string;
     available: boolean;
     description: string;
     toppings: ToppingInput[];

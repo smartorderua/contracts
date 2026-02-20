@@ -7,18 +7,12 @@ model ValidationError {
 
 @error
 model UnauthorizedError {
-    code: "UNAUTHORIZED";
-    message: string;
-}
-
-@error
-model TenantNotFoundError {
-    code: "TENANT_NOT_FOUND";
+    code: "UNAUTHORIZED" | "TOKEN_EXPIRED";
     message: string;
 }
 
 @error
 model NotFoundError {
-    code: "NOT_FOUND";
+    code: "NOT_FOUND" | "TENANT_NOT_FOUND";
     message: string;
 }
