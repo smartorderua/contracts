@@ -23,7 +23,7 @@ model MenuItem {
     ...EntityBase;
 
     @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
-    tenantId: BsonId;
+    tenantId: string;
 
     imageUrl: string;
     toppings: Topping[];
