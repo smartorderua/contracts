@@ -1,10 +1,17 @@
 model UserPublic {
     id: BsonId;
+
+    @format("email")
+    email: string;
+
     username: string;
-    role: "admin" | "staff";
+    createdAt: utcDateTime;
+    updatedAt: utcDateTime;
 }
 
-model User extends UserPublic {
+model UserInternal {
+    ...UserPublic;
+
     @secret
     password: string;
 

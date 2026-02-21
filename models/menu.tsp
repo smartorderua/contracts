@@ -1,7 +1,7 @@
 import "./toppings.tsp";
 import "./id.tsp";
 
-model MenuItemInput {
+model MenuItemBase {
     name: string;
 
     @minValue(0)
@@ -10,23 +10,18 @@ model MenuItemInput {
     category: string;
     available: boolean;
     description: string;
+}
+
+model MenuItemInput {
+    ...MenuItemBase;
     toppings: ToppingInput[];
 }
 
 model MenuItem {
-    // bson id
+    ...MenuItemBase;
     id: BsonId;
-
-    name: string;
-
-    @minValue(0)
-    price: int32;
-
     tenantId: string;
-    available: boolean;
-    category: string;
     imageUrl: string;
-    description: string;
     toppings: Topping[];
     createdAt: utcDateTime;
     updatedAt: utcDateTime;

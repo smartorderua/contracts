@@ -17,13 +17,7 @@ model OrderItemInput {
 model OrderItem {
     id: BsonId;
     totalPrice: int32;
-
-    @extension("x-faker", #{ `random.alpha`: #[16] })
     tenantId: string;
-
-    @extension("x-faker", #{ `random.alpha`: #[16] })
     menuItemId: string;
-
-    @extension("x-faker", #{ `random.alpha`: #[16] })
     invoiceId?: string;
 }

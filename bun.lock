@@ -77,6 +77,8 @@
 
     "@typespec/http": ["@typespec/http@1.9.0", "", { "peerDependencies": { "@typespec/compiler": "^1.9.0", "@typespec/streams": "^0.79.0" }, "optionalPeers": ["@typespec/streams"] }, "sha512-JzlZZsgCo71f2KhWbf4BLOz5e+dVLj7gJJ4kvXvrmuG9QHoT41VaGPpCQamYgpZLMz2LQbsOtw34AmpovhuJSw=="],
 
+    "@typespec/json-schema": ["@typespec/json-schema@1.9.0", "", { "dependencies": { "@typespec/asset-emitter": "^0.79.0", "yaml": "~2.8.2" }, "peerDependencies": { "@typespec/compiler": "^1.9.0" } }, "sha512-splP6YL1CWPtBDenOeaVEs058TBqSzMDZyX4h9A39Q5qwmhyQ00DPXdnmJWRP96IWVAlHnN806GJWc/yttzSVg=="],
+
     "@typespec/openapi": ["@typespec/openapi@1.9.0", "", { "peerDependencies": { "@typespec/compiler": "^1.9.0", "@typespec/http": "^1.9.0" } }, "sha512-5ieXCWRLcyFLv3IFk26ena/RW/NxvT5KiHaoNVFRd79J0XZjFcE0Od6Lxxqj4dWmCo3C8oKtOwFoQuie18G3lQ=="],
 
     "@typespec/openapi3": ["@typespec/openapi3@1.9.0", "", { "dependencies": { "@scalar/json-magic": "^0.9.1", "@scalar/openapi-parser": "^0.24.1", "@scalar/openapi-types": "^0.5.0", "@typespec/asset-emitter": "^0.79.0", "yaml": "~2.8.2" }, "peerDependencies": { "@typespec/compiler": "^1.9.0", "@typespec/events": "^0.79.0", "@typespec/http": "^1.9.0", "@typespec/json-schema": "^1.9.0", "@typespec/openapi": "^1.9.0", "@typespec/sse": "^0.79.0", "@typespec/streams": "^0.79.0", "@typespec/versioning": "^0.79.0" }, "optionalPeers": ["@typespec/events", "@typespec/json-schema", "@typespec/sse", "@typespec/streams"], "bin": { "tsp-openapi3": "cmd/tsp-openapi3.js" } }, "sha512-htwhrGHQxuoNwAljeJE8CBt5yfKOv48T9Ugv91Y+4yNnlevJfDT29yrfD2mXYMujVOr3Kte1qilazClafkUIgg=="],

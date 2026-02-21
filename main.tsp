@@ -20,8 +20,13 @@ model LoginResponse {
 }
 
 model LoginRequest {
-  username: string;
+  email: string;
   password: string;
+}
+
+model SignUpRequest {
+  ...LoginRequest;
+  username: string;
 }
 
 @tag("Auth")
@@ -29,7 +34,7 @@ model LoginRequest {
 interface Auth {
   @post
   @route("/signup")
-  signUp(@body body: LoginRequest): {
+  signUp(@body body: SignUpRequest): {
     @statusCode statusCode: 201;
     @body response: UserPublic;
   } | {
@@ -134,7 +139,7 @@ interface Menu {
   updateItem(
     ...TenantParams,
     @path id: string,
-    @body body: MergePatchUpdate<MenuItem>,
+    @body body: MergePatchUpdate<MenuItemInput>,
   ):
     | {
         @statusCode statusCode: 200;
