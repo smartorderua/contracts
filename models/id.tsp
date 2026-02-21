@@ -4,7 +4,11 @@ alias ExtraTags = "x-oapi-codegen-extra-tags";
 
 using OpenAPI;
 
-@format("bsonid")
+@extension("x-go-type", "bson.ObjectID")
+@extension(
+    "x-go-type-import",
+    #{ path: "go.mongodb.org/mongo-driver/v2/bson", name: "bson" }
+)
 scalar BsonId extends string;
 
 @extension(ExtraTags, #{ bson: "_id,omitempty" })
