@@ -1,3 +1,8 @@
+model TenantInput {
+    name: string;
+    uniqueId: string;
+}
+
 model Tenant {
     id: BsonId;
     name: string;

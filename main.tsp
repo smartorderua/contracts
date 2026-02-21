@@ -78,6 +78,10 @@ interface Auth {
   };
 }
 
+model UpdateItemImageResponse {
+  imageUrl: string;
+}
+
 @tag("Menu")
 @route("/menu")
 interface Menu {
@@ -131,7 +135,23 @@ interface Menu {
     @multipartBody fields: {
       file: HttpPart<File>;
     },
-  ): void;
+  ):
+    | {
+        @statusCode statusCode: 200;
+        @body resp: UpdateItemImageResponse;
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      };
 
   @patch
   @useAuth(BearerAuth)
@@ -202,14 +222,53 @@ interface Orders {
   };
 }
 
+model StaffInput {
+  emails: string[];
+}
+
 @tag("Tenants")
 @route("/tenants")
 interface Tenants {
-  @get find(@path tenantId: string): {
+  @get
+  @useAuth(BearerAuth)
+  find(@path tenantId: string): {
     @statusCode statusCode: 200;
     @body tenant: Tenant;
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
   };
+
+  @post
+  @useAuth(BearerAuth)
+  create(@body body: TenantInput): {
+    @statusCode statusCode: 201;
+    @body tenant: Tenant;
+  } | {
+    @statusCode statusCode: 400;
+    @body error: ValidationError;
+  } | {
+    @statusCode statusCode: 401;
+    @body error: UnauthorizedError;
+  };
+
+  @post
+  @useAuth(BearerAuth)
+  @route("/{tenantId}/staff")
+  addStaff(...TenantParams, @body body: StaffInput):
+    | {
+        @statusCode statusCode: 200;
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      };
 }
