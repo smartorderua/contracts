@@ -8,16 +8,29 @@ enum OrderStatus {
     Cancelled: "cancelled",
 }
 
-model OrderItemInput {
+model OrderItemBase {
+    @extension(ExtraTags, #{ bson: "table_id,omitempty" })
     tableId: int32;
+
+    @extension(ExtraTags, #{ bson: "menu_item_id,omitempty" })
     menuItemId: string;
+}
+
+model OrderItemInput {
+    ...OrderItemBase;
     toppings: string[];
 }
 
 model OrderItem {
-    id: BsonId;
+    ...OrderItemBase;
+    ...EntityBase;
+
+    @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
+    tenantId: BsonId;
+
+    @extension(ExtraTags, #{ bson: "total_price,omitempty" })
     totalPrice: int32;
-    tenantId: string;
-    menuItemId: string;
+
+    @extension(ExtraTags, #{ bson: "invoice_id" })
     invoiceId?: string;
 }

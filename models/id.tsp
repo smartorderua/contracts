@@ -1,6 +1,11 @@
 import "@typespec/openapi";
 
+alias ExtraTags = "x-oapi-codegen-extra-tags";
+
 using OpenAPI;
 
-@extension("x-oapi-codegen-extra-tags", #{ bson: "_id,omitempty" })
+@format("bsonid")
 scalar BsonId extends string;
+
+@extension(ExtraTags, #{ bson: "_id,omitempty" })
+scalar BsonEntityId extends BsonId;

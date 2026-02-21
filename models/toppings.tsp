@@ -9,6 +9,6 @@ model ToppingInput {
 }
 
 model Topping {
-    id: BsonId;
     ...ToppingInput;
+    id: BsonEntityId;
 }

@@ -1,12 +1,14 @@
+import "@typespec/openapi";
+
+using OpenAPI;
+
 model UserPublic {
-    id: BsonId;
+    ...EntityBase;
 
     @format("email")
     email: string;
 
     username: string;
-    createdAt: utcDateTime;
-    updatedAt: utcDateTime;
 }
 
 model UserInternal {
@@ -18,6 +20,8 @@ model UserInternal {
     @secret
     session: {
         refresh: string;
+
+        @extension(ExtraTags, #{ bson: "expires_at,omitempty" })
         expiresAt: utcDateTime;
     };
 }

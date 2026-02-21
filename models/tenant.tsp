@@ -1,14 +1,17 @@
+import "@typespec/openapi";
+
+using OpenAPI;
+
 model TenantInput {
     name: string;
+
+    @extension(ExtraTags, #{ bson: "unique_id,omitempty" })
     uniqueId: string;
 }
 
 model Tenant {
-    id: BsonId;
-    name: string;
-    uniqueId: string;
+    ...EntityBase;
+    ...TenantInput;
     admins: string[];
     staff: string[];
-    createdAt: utcDateTime;
-    updatedAt: utcDateTime;
 }

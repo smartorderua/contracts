@@ -1,5 +1,6 @@
-import "./toppings.tsp";
-import "./id.tsp";
+import "@typespec/openapi";
+
+using OpenAPI;
 
 model MenuItemBase {
     name: string;
@@ -19,10 +20,11 @@ model MenuItemInput {
 
 model MenuItem {
     ...MenuItemBase;
-    id: BsonId;
-    tenantId: string;
+    ...EntityBase;
+
+    @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
+    tenantId: BsonId;
+
     imageUrl: string;
     toppings: Topping[];
-    createdAt: utcDateTime;
-    updatedAt: utcDateTime;
 }
