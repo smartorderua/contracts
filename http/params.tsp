@@ -8,5 +8,5 @@ model TenantParams {
 
 model OrderParams {
     ...TenantParams;
-    @path tableId: int32;
+    @path orderId: string;
 }

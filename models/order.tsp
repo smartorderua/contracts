@@ -3,34 +3,49 @@ import "@typespec/openapi";
 using OpenAPI;
 
 enum OrderStatus {
-    Paid: "paid",
     Pending: "pending",
+    InProgress: "in_progress",
+    Completed: "completed",
     Cancelled: "cancelled",
 }
 
-model OrderItemBase {
-    @extension(ExtraTags, #{ bson: "table_id,omitempty" })
-    tableId: int32;
-
-    @extension(ExtraTags, #{ bson: "menu_item_id,omitempty" })
-    menuItemId: string;
+enum OrderPaymentMethod {
+    Cash: "cash",
+    Online: "online",
+    CreditCard: "credit_card",
 }
 
-model OrderItemInput {
-    ...OrderItemBase;
-    toppings: string[];
+model OrderBase {
+    comment: string;
+
+    @extension(ExtraTags, #{ bson: "client_name" })
+    clientName: string;
+
+    @extension(ExtraTags, #{ bson: "client_phone" })
+    clientPhone: string;
+
+    @extension(ExtraTags, #{ bson: "payment_method,omitempty" })
+    paymentMethod: OrderPaymentMethod;
 }
 
-model OrderItem {
-    ...OrderItemBase;
+model OrderInput {
+    ...OrderBase;
+    items: OrderItemInput[];
+}
+
+model Order {
     ...EntityBase;
+    ...OrderBase;
+    items: OrderItem[];
+    status: OrderStatus;
 
     @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
     tenantId: BsonId;
 
-    @extension(ExtraTags, #{ bson: "total_price,omitempty" })
-    totalPrice: int32;
+    @extension(ExtraTags, #{ bson: "readable_id" })
+    readableId: string;
 
-    @extension(ExtraTags, #{ bson: "invoice_id" })
+    // only present when PaymentMethod is Online
+    @extension(ExtraTags, #{ bson: "invoice_id,omitempty" })
     invoiceId?: string;
 }

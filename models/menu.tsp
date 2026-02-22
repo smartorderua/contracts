@@ -25,6 +25,8 @@ model MenuItem {
     @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
     tenantId: string;
 
+    @extension(ExtraTags, #{ bson: "image_url,omitempty" })
     imageUrl: string;
+
     toppings: Topping[];
 }

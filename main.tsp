@@ -1,9 +1,13 @@
 import "@typespec/http";
 import "@typespec/versioning";
+import "@typespec/events";
+import "@typespec/sse";
 import "./http";
 import "./models";
 
 using Versioning;
+using Events;
+using SSE;
 using Http;
 
 @versioned(Versions)
@@ -192,27 +196,54 @@ interface Menu {
   };
 }
 
-model OrderCreateResponse {
-  paymentUrl: string;
+model OrderStatusEvent {
+  status: OrderStatus;
+  timestamp: utcDateTime;
+}
+
+// streams item types are not supported in openapi <3.2.0
+@events
+union OrderEvents {
+  orderstatus: OrderStatusEvent,
+
+  @terminalEvent
+  @contentType("text/plain")
+  "[unsubscribe]",
 }
 
 @tag("Orders")
 @route("/orders")
 interface Orders {
-  // List all orders for a specific tenant and table
-  // Acts like a table session
   @get read(...OrderParams): {
     @statusCode statusCode: 200;
-    @body items: OrderItem[];
+    @body items: Order[];
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  } | {
+    // occurs when the provided orderId is not valid
+    @body error: ValidationError;
+
+    @statusCode statusCode: 400;
+  };
+
+  // Create new order for a specific tenant and table
+  @post create(...TenantParams, @body body: OrderInput[]): {
+    @statusCode statusCode: 201;
+    @body resp: Order;
+  } | {
+    @statusCode statusCode: 400;
+    @body error: ValidationError;
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
   };
 
-  // Create new order for a specific tenant and table
-  @post create(...OrderParams, @body body: OrderItemInput[]): {
-    @statusCode statusCode: 201;
-    @body resp: OrderCreateResponse;
+  @get
+  @route("/{tenantId}/events/{orderId}")
+  getEvents(...OrderParams): {
+    @statusCode statusCode: 200;
+    @bodyRoot events: SSEStream<OrderEvents>;
   } | {
     @statusCode statusCode: 400;
     @body error: ValidationError;
