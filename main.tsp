@@ -209,7 +209,7 @@ interface Orders {
   };
 
   // Create new order for a specific tenant and table
-  @post create(...TenantParams, @body body: OrderInput[]): {
+  @post create(...TenantParams, @body body: OrderInput): {
     @statusCode statusCode: 201;
     @body resp: Order;
   } | {
