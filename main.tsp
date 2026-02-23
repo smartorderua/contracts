@@ -1,13 +1,9 @@
 import "@typespec/http";
 import "@typespec/versioning";
-import "@typespec/events";
-import "@typespec/sse";
 import "./http";
 import "./models";
 
 using Versioning;
-using Events;
-using SSE;
 using Http;
 
 @versioned(Versions)
@@ -196,21 +192,6 @@ interface Menu {
   };
 }
 
-model OrderStatusEvent {
-  status: OrderStatus;
-  timestamp: utcDateTime;
-}
-
-// streams item types are not supported in openapi <3.2.0
-@events
-union OrderEvents {
-  orderstatus: OrderStatusEvent,
-
-  @terminalEvent
-  @contentType("text/plain")
-  "[unsubscribe]",
-}
-
 @tag("Orders")
 @route("/orders")
 interface Orders {
@@ -231,19 +212,6 @@ interface Orders {
   @post create(...TenantParams, @body body: OrderInput[]): {
     @statusCode statusCode: 201;
     @body resp: Order;
-  } | {
-    @statusCode statusCode: 400;
-    @body error: ValidationError;
-  } | {
-    @statusCode statusCode: 404;
-    @body error: NotFoundError;
-  };
-
-  @get
-  @route("/{tenantId}/events/{orderId}")
-  getEvents(...OrderParams): {
-    @statusCode statusCode: 200;
-    @bodyRoot events: SSEStream<OrderEvents>;
   } | {
     @statusCode statusCode: 400;
     @body error: ValidationError;

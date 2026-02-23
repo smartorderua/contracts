@@ -8,12 +8,10 @@
   },
   "dependencies": {
     "@typespec/compiler": "latest",
-    "@typespec/events": "^0.79.0",
     "@typespec/http": "latest",
     "@typespec/openapi": "latest",
     "@typespec/openapi3": "latest",
     "@typespec/rest": "latest",
-    "@typespec/sse": "^0.79.0",
     "@typespec/versioning": "latest"
   }
 }

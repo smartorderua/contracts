@@ -12,6 +12,6 @@ model TenantInput {
 model Tenant {
     ...EntityBase;
     ...TenantInput;
-    admins: string[];
-    staff: string[];
+    admins: BsonId[];
+    staff: BsonId[];
 }
