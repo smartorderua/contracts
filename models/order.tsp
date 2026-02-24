@@ -49,3 +49,7 @@ model Order {
     @extension(ExtraTags, #{ bson: "invoice_id,omitempty" })
     invoiceId?: string;
 }
+
+model OrderWithDetails extends Order {
+    items: OrderItemWithDetails[];
+}

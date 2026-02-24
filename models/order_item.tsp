@@ -4,7 +4,7 @@ using OpenAPI;
 
 model OrderItemBase {
     @extension(ExtraTags, #{ bson: "menu_item_id,omitempty" })
-    menuItemId: string;
+    menuItemId: BsonId;
 }
 
 model OrderItemInput {
@@ -14,8 +14,13 @@ model OrderItemInput {
 
 model OrderItem {
     ...OrderItemBase;
-    ...EntityBase;
+    id: BsonEntityId;
 
     @extension(ExtraTags, #{ bson: "total_price,omitempty" })
     totalPrice: int32;
+}
+
+model OrderItemWithDetails {
+    ...OrderItem;
+    menuItem: MenuItem;
 }

@@ -197,7 +197,7 @@ interface Menu {
 interface Orders {
   @get read(...OrderParams): {
     @statusCode statusCode: 200;
-    @body items: Order[];
+    @body order: OrderWithDetails;
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
@@ -211,7 +211,7 @@ interface Orders {
   // Create new order for a specific tenant and table
   @post create(...TenantParams, @body body: OrderInput): {
     @statusCode statusCode: 201;
-    @body resp: Order;
+    @body resp: OrderWithDetails;
   } | {
     @statusCode statusCode: 400;
     @body error: ValidationError;
