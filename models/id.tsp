@@ -4,12 +4,13 @@ alias ExtraTags = "x-oapi-codegen-extra-tags";
 
 using OpenAPI;
 
-@extension("x-go-type", "bson.ObjectID")
+@extension("x-go-type", "uuid.UUID")
 @extension(
     "x-go-type-import",
-    #{ path: "go.mongodb.org/mongo-driver/v2/bson", name: "bson" }
+    #{ path: "github.com/google/uuid", name: "uuid" }
 )
-scalar BsonId extends string;
+@format("uuid")
+scalar UUID extends string;
 
-@extension(ExtraTags, #{ bson: "_id,omitempty" })
-scalar BsonEntityId extends BsonId;
+@extension(ExtraTags, #{ db: "id,omitempty" })
+scalar UUIDPrimaryKey extends UUID;

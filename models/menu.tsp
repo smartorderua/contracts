@@ -22,10 +22,10 @@ model MenuItem {
     ...MenuItemBase;
     ...EntityBase;
 
-    @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
+    @extension(ExtraTags, #{ db: "tenant_id" })
     tenantId: string;
 
-    @extension(ExtraTags, #{ bson: "image_url,omitempty" })
+    @extension(ExtraTags, #{ db: "image_url" })
     imageUrl: string;
 
     toppings: Topping[];

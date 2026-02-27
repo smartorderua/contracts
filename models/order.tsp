@@ -18,13 +18,13 @@ enum OrderPaymentMethod {
 model OrderBase {
     comment: string;
 
-    @extension(ExtraTags, #{ bson: "client_name" })
+    @extension(ExtraTags, #{ db: "client_name" })
     clientName: string;
 
-    @extension(ExtraTags, #{ bson: "client_phone" })
+    @extension(ExtraTags, #{ db: "client_phone" })
     clientPhone: string;
 
-    @extension(ExtraTags, #{ bson: "payment_method,omitempty" })
+    @extension(ExtraTags, #{ db: "payment_method" })
     paymentMethod: OrderPaymentMethod;
 }
 
@@ -39,14 +39,14 @@ model Order {
     items: OrderItem[];
     status: OrderStatus;
 
-    @extension(ExtraTags, #{ bson: "tenant_id,omitempty" })
-    tenantId: BsonId;
+    @extension(ExtraTags, #{ db: "tenant_id" })
+    tenantId: UUID;
 
-    @extension(ExtraTags, #{ bson: "readable_id" })
+    @extension(ExtraTags, #{ db: "readable_id" })
     readableId: string;
 
     // only present when PaymentMethod is Online
-    @extension(ExtraTags, #{ bson: "invoice_id,omitempty" })
+    @extension(ExtraTags, #{ db: "invoice_id" })
     invoiceId?: string;
 }
 

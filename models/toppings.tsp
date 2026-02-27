@@ -10,5 +10,5 @@ model ToppingInput {
 
 model Topping {
     ...ToppingInput;
-    id: BsonEntityId;
+    id: UUIDPrimaryKey;
 }

@@ -3,8 +3,8 @@ import "@typespec/openapi";
 using OpenAPI;
 
 model OrderItemBase {
-    @extension(ExtraTags, #{ bson: "menu_item_id,omitempty" })
-    menuItemId: BsonId;
+    @extension(ExtraTags, #{ db: "menu_item_id" })
+    menuItemId: UUID;
 }
 
 model OrderItemInput {
@@ -14,9 +14,9 @@ model OrderItemInput {
 
 model OrderItem {
     ...OrderItemBase;
-    id: BsonEntityId;
+    id: UUIDPrimaryKey;
 
-    @extension(ExtraTags, #{ bson: "total_price,omitempty" })
+    @extension(ExtraTags, #{ db: "total_price" })
     totalPrice: int32;
 }
 

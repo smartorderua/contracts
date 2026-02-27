@@ -21,7 +21,7 @@ model UserInternal {
     session: {
         refresh: string;
 
-        @extension(ExtraTags, #{ bson: "expires_at,omitempty" })
+        @extension(ExtraTags, #{ db: "expires_at,omitempty" })
         expiresAt: utcDateTime;
     };
 }

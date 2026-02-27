@@ -3,11 +3,11 @@ import "@typespec/openapi";
 using OpenAPI;
 
 model EntityBase {
-    id: BsonEntityId;
+    id: UUIDPrimaryKey;
 
-    @extension(ExtraTags, #{ bson: "created_at,omitempty" })
+    @extension(ExtraTags, #{ db: "created_at" })
     createdAt: utcDateTime;
 
-    @extension(ExtraTags, #{ bson: "updated_at,omitempty" })
+    @extension(ExtraTags, #{ db: "updated_at" })
     updatedAt: utcDateTime;
 }
