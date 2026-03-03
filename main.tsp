@@ -89,7 +89,7 @@ interface Menu {
   @route("/{tenantId}/items")
   listItems(...TenantParams): {
     @statusCode statusCode: 200;
-    @body items: MenuItem[];
+    @body items: MenuItemWithToppings[];
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
@@ -99,7 +99,7 @@ interface Menu {
   @route("/{tenantId}/items/{id}")
   readItem(...TenantParams, @path id: string): {
     @statusCode statusCode: 200;
-    @body item: MenuItem;
+    @body item: MenuItemWithToppings;
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
@@ -190,6 +190,33 @@ interface Menu {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
   };
+
+  @post
+  @useAuth(BearerAuth)
+  @route("/{tenantId}/items/{id}/toppings")
+  addToppings(
+    ...TenantParams,
+    @path id: string,
+    @body body: {
+      toppings: ToppingInput[];
+    },
+  ):
+    | {
+        @statusCode statusCode: 201;
+        @body createdToppings: Topping[];
+      }
+    | {
+        @statusCode statusCode: 400;
+        @body error: ValidationError;
+      }
+    | {
+        @statusCode statusCode: 401;
+        @body error: UnauthorizedError;
+      }
+    | {
+        @statusCode statusCode: 404;
+        @body error: NotFoundError;
+      };
 }
 
 @tag("Orders")
@@ -233,6 +260,9 @@ interface Tenants {
   find(@path tenantId: string): {
     @statusCode statusCode: 200;
     @body tenant: Tenant;
+  } | {
+    @statusCode statusCode: 401;
+    @body error: UnauthorizedError;
   } | {
     @statusCode statusCode: 404;
     @body error: NotFoundError;

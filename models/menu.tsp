@@ -27,6 +27,9 @@ model MenuItem {
 
     @extension(ExtraTags, #{ db: "image_url" })
     imageUrl: string;
+}
 
+model MenuItemWithToppings {
+    ...MenuItem;
     toppings: Topping[];
 }
