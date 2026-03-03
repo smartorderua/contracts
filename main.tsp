@@ -20,8 +20,8 @@ model LoginResponse {
 }
 
 model LoginRequest {
-  email: string;
-  password: string;
+  email: Email;
+  password: Password;
 }
 
 model SignUpRequest {

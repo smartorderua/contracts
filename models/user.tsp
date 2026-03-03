@@ -4,10 +4,9 @@ using OpenAPI;
 
 model UserPublic {
     ...EntityBase;
+    email: Email;
 
-    @format("email")
-    email: string;
-
+    @minLength(4)
     username: string;
 }
 
@@ -15,7 +14,7 @@ model UserInternal {
     ...UserPublic;
 
     @secret
-    password: string;
+    password: Password;
 
     @secret
     session: {

@@ -5,3 +5,4 @@ import "./tenant.tsp";
 import "./user.tsp";
 import "./base.tsp";
 import "./order_item.tsp";
+import "./scalars.tsp";
