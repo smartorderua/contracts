@@ -12,6 +12,10 @@ model TenantInput {
 model Tenant {
     ...EntityBase;
     ...TenantInput;
+}
+
+model TenantWithRoles {
+    ...Tenant;
     admins: UUID[];
     staff: UUID[];
 }
