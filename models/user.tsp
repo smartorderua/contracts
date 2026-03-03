@@ -17,10 +17,10 @@ model UserInternal {
     password: Password;
 
     @secret
-    session: {
-        refresh: string;
+    @extension(ExtraTags, #{ db: "refresh_token" })
+    refreshToken: string;
 
-        @extension(ExtraTags, #{ db: "expires_at,omitempty" })
-        expiresAt: utcDateTime;
-    };
+    @secret
+    @extension(ExtraTags, #{ db: "session_expires_at" })
+    sessionExpiresAt: utcDateTime;
 }
