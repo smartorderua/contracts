@@ -2,7 +2,7 @@ import "@typespec/openapi";
 
 using OpenAPI;
 
-model MenuItemBase {
+model MenuItemInput {
     name: string;
 
     @minValue(0)
@@ -13,13 +13,8 @@ model MenuItemBase {
     description: string;
 }
 
-model MenuItemInput {
-    ...MenuItemBase;
-    toppings: ToppingInput[];
-}
-
 model MenuItem {
-    ...MenuItemBase;
+    ...MenuItemInput;
     ...EntityBase;
 
     @extension(ExtraTags, #{ db: "tenant_id" })

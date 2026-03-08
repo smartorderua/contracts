@@ -2,6 +2,7 @@ import "@typespec/openapi";
 import "./id.tsp";
 
 model ToppingInput {
+    @minLength(1)
     name: string;
 
     @minValue(0)

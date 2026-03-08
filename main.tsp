@@ -95,16 +95,6 @@ interface Menu {
     @body error: NotFoundError;
   };
 
-  @get
-  @route("/{tenantId}/items/{id}")
-  readItem(...TenantParams, @path id: string): {
-    @statusCode statusCode: 200;
-    @body item: MenuItemWithToppings;
-  } | {
-    @statusCode statusCode: 404;
-    @body error: NotFoundError;
-  };
-
   @post
   @route("/{tenantId}/items")
   @useAuth(BearerAuth)
@@ -191,6 +181,16 @@ interface Menu {
     @body error: NotFoundError;
   };
 
+  @get
+  @route("/{tenantId}/items/{id}/toppings")
+  listToppings(...TenantParams, @path id: string): {
+    @statusCode statusCode: 200;
+    @body toppings: Topping[];
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  };
+
   @post
   @useAuth(BearerAuth)
   @route("/{tenantId}/items/{id}/toppings")
@@ -217,6 +217,19 @@ interface Menu {
         @statusCode statusCode: 404;
         @body error: NotFoundError;
       };
+
+  @delete
+  @useAuth(BearerAuth)
+  @route("/{tenantId}/items/{id}/toppings/{toppingId}")
+  deleteTopping(...TenantParams, @path id: string, @path toppingId: string): {
+    @statusCode statusCode: 204;
+  } | {
+    @statusCode statusCode: 401;
+    @body error: UnauthorizedError;
+  } | {
+    @statusCode statusCode: 404;
+    @body error: NotFoundError;
+  };
 }
 
 @tag("Orders")
