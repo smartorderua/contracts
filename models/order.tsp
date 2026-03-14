@@ -36,35 +36,17 @@ model OrderInput {
 model Order {
     ...EntityBase;
     ...OrderBase;
-    items: OrderItem[];
-    status: OrderStatus;
-
-    @extension(ExtraTags, #{ db: "tenant_id" })
-    tenantId: TenantUniqueId;
-
-    @extension(ExtraTags, #{ db: "readable_id" })
-    @doc("A random six-digit code for the order")
-    readableId: string;
-
-    @extension(ExtraTags, #{ db: "invoice_id" })
-    @doc("Only present if PaymentMethod is set to Online")
-    invoiceId?: string;
-}
-
-model OrderWithDetails {
-    ...OrderBase;
-
-    @extension(ExtraTags, #{ db: "tenant_id" })
-    tenantId: TenantUniqueId;
-
-    @extension(ExtraTags, #{ db: "readable_id" })
-    @doc("A random six-digit code for the order")
-    readableId: string;
-
-    @extension(ExtraTags, #{ db: "invoice_id" })
-    @doc("Only present if PaymentMethod is set to Online")
-    invoiceId?: string;
-
-    status: OrderStatus;
     items: OrderItemWithDetails[];
+    status: OrderStatus;
+
+    @extension(ExtraTags, #{ db: "tenant_id" })
+    tenantId: TenantUniqueId;
+
+    @extension(ExtraTags, #{ db: "readable_id" })
+    @doc("A random six-digit code for the order")
+    readableId: string;
+
+    @extension(ExtraTags, #{ db: "invoice_id" })
+    @doc("Only present if PaymentMethod is set to Online")
+    invoiceId?: string;
 }

@@ -28,4 +28,5 @@ model OrderItem {
 model OrderItemWithDetails {
     ...OrderItem;
     menuItem: MenuItem;
+    toppings: Topping[];
 }
