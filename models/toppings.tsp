@@ -1,12 +1,14 @@
 import "@typespec/openapi";
 import "./id.tsp";
 
+/**
+ * The input model for creating or updating a topping.
+ */
 model ToppingInput {
     @minLength(1)
     name: string;
 
-    @minValue(0)
-    price: int32;
+    price: Price;
 }
 
 model Topping {

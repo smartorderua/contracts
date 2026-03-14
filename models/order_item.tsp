@@ -7,8 +7,13 @@ model OrderItemBase {
     menuItemId: UUID;
 }
 
+/**
+ * The input model for creating or updating an order item.
+ */
 model OrderItemInput {
     ...OrderItemBase;
+
+    @doc("An array of selected toppings' ids")
     toppings: string[];
 }
 

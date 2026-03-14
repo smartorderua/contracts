@@ -2,12 +2,13 @@ import "@typespec/openapi";
 
 using OpenAPI;
 
+/**
+ * The input model for creating or updating a menu item.
+ * An image can be uploaded separately after creation.
+ */
 model MenuItemInput {
     name: string;
-
-    @minValue(0)
-    price: int32;
-
+    price: Price;
     category: string;
     available: boolean;
     description: string;
@@ -18,10 +19,10 @@ model MenuItem {
     ...EntityBase;
 
     @extension(ExtraTags, #{ db: "tenant_id" })
-    tenantId: string;
+    tenantId: TenantUniqueId;
 
     @extension(ExtraTags, #{ db: "image_url" })
-    imageUrl: string;
+    imageUrl: url;
 }
 
 model MenuItemWithToppings {

@@ -34,16 +34,27 @@ model SignUpRequest {
 interface Auth {
   @post
   @route("/signup")
+  @doc("Register a new user with email and password")
   signUp(@body body: SignUpRequest): {
     @statusCode statusCode: 201;
     @body response: UserPublic;
   } | {
     @statusCode statusCode: 400;
-    @body error: ValidationError;
+
+    @body
+    @doc("Occurs when the email is already registered or input validation fails")
+    error: ValidationError;
   };
 
   @post
   @route("/login")
+  @doc("""
+          Authenticate a user and return access and refresh tokens.
+          Access token is then used to access protected endpoints using BearerAuth.
+          Refresh token can be used to obtain a new pair of tokens using /refresh endpoint
+           - Returns 200 with tokens if credentials are valid.
+           - Returns 401 if credentials are invalid.
+    """)
   login(@body body: LoginRequest): {
     @statusCode statusCode: 200;
     @body response: LoginResponse;
@@ -54,6 +65,11 @@ interface Auth {
 
   @post
   @route("/refresh")
+  @doc("""
+          Returns a new pair of access and refresh tokens given a valid refresh token.
+           - Returns 200 with new tokens if the refresh token is valid.
+           - Returns 401 if the refresh token is invalid or expired.
+    """)
   refresh(
     @body body: {
       refreshToken: string;
@@ -69,6 +85,11 @@ interface Auth {
   @get
   @route("/me")
   @useAuth(BearerAuth)
+  @doc("""
+          Get the currently authenticated user's information.
+           - Returns 200 with user info if the access token is valid.
+           - Returns 401 if the access token is missing, invalid, or expired.
+    """)
   me(): {
     @statusCode statusCode: 200;
     @body response: UserPublic;
@@ -79,7 +100,7 @@ interface Auth {
 }
 
 model UpdateItemImageResponse {
-  imageUrl: string;
+  imageUrl: url;
 }
 
 @tag("Menu")
@@ -87,6 +108,11 @@ model UpdateItemImageResponse {
 interface Menu {
   @get
   @route("/{tenantId}/items")
+  @doc("""
+          Get all menu items for a specific tenant, including their toppings.
+           - Returns 200 with the list of menu items if the tenant exists.
+           - Returns 404 if the tenant does not exist.
+    """)
   listItems(...TenantParams): {
     @statusCode statusCode: 200;
     @body items: MenuItemWithToppings[];
@@ -98,6 +124,13 @@ interface Menu {
   @post
   @route("/{tenantId}/items")
   @useAuth(BearerAuth)
+  @doc("""
+          Create a new menu item for a specified tenant.
+           - Returns 201 with the created menu item if the request is valid.
+           - Returns 400 if the request body fails validation checks.
+           - Returns 401 if the request is not authenticated or the token has expired or user's permissions are insufficient.
+           - Returns 404 if the tenant does not exist.
+    """)
   createItem(...TenantParams, @body body: MenuItemInput):
     | {
         @statusCode statusCode: 201;
@@ -119,6 +152,13 @@ interface Menu {
   @post
   @useAuth(BearerAuth)
   @route("/{tenantId}/items/{id}/image")
+  @doc("""
+          Upload or update the image for a specific menu item.
+           - Returns 200 with the new image URL if the upload is successful.
+           - Returns 400 if the request fails validation checks (e.g., missing file).
+           - Returns 401 if the request is not authenticated or the token has expired or user's permissions are insufficient.
+           - Returns 404 if the tenant or menu item does not exist.
+    """)
   updateItemImage(
     ...TenantParams,
     @path id: string,
@@ -242,13 +282,10 @@ interface Orders {
     @statusCode statusCode: 404;
     @body error: NotFoundError;
   } | {
-    // occurs when the provided orderId is not valid
     @body error: ValidationError;
-
     @statusCode statusCode: 400;
   };
 
-  // Create new order for a specific tenant and table
   @post create(...TenantParams, @body body: OrderInput): {
     @statusCode statusCode: 201;
     @body resp: OrderWithDetails;

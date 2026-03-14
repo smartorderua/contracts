@@ -1,9 +1,10 @@
 import "@typespec/http";
+import "../models";
 
 using Http;
 
 model TenantParams {
-    @path tenantId: string;
+    @path tenantId: TenantUniqueId;
 }
 
 model OrderParams {

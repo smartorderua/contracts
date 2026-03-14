@@ -40,16 +40,31 @@ model Order {
     status: OrderStatus;
 
     @extension(ExtraTags, #{ db: "tenant_id" })
-    tenantId: UUID;
+    tenantId: TenantUniqueId;
 
     @extension(ExtraTags, #{ db: "readable_id" })
+    @doc("A random six-digit code for the order")
     readableId: string;
 
-    // only present when PaymentMethod is Online
     @extension(ExtraTags, #{ db: "invoice_id" })
+    @doc("Only present if PaymentMethod is set to Online")
     invoiceId?: string;
 }
 
-model OrderWithDetails extends Order {
+model OrderWithDetails {
+    ...OrderBase;
+
+    @extension(ExtraTags, #{ db: "tenant_id" })
+    tenantId: TenantUniqueId;
+
+    @extension(ExtraTags, #{ db: "readable_id" })
+    @doc("A random six-digit code for the order")
+    readableId: string;
+
+    @extension(ExtraTags, #{ db: "invoice_id" })
+    @doc("Only present if PaymentMethod is set to Online")
+    invoiceId?: string;
+
+    status: OrderStatus;
     items: OrderItemWithDetails[];
 }

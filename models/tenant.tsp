@@ -3,12 +3,12 @@ import "@typespec/openapi";
 using OpenAPI;
 
 model TenantInput {
-    @minLength(1)
+    @minLength(4)
+    @maxLength(30)
     name: string;
 
-    @minLength(4)
     @extension(ExtraTags, #{ db: "unique_id,omitempty" })
-    uniqueId: string;
+    uniqueId: TenantUniqueId;
 }
 
 model Tenant {

@@ -1,4 +1,8 @@
 @error
+@doc("""
+        Validation error, returned when the request body/path fails validation checks.
+        The `details` array contains specific validation error messages for each failed field.
+    """)
 model ValidationError {
     code: "VALIDATION_ERROR";
     message: string;
@@ -6,6 +10,9 @@ model ValidationError {
 }
 
 @error
+@doc("""
+        Unauthorized error, returned when the request is not authenticated or the token has expired.
+    """)
 model UnauthorizedError {
     code: "UNAUTHORIZED" | "TOKEN_EXPIRED";
     message: string;
